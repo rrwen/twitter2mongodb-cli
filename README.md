@@ -3,8 +3,6 @@
 Richard Wen  
 rrwen.dev@gmail.com  
 
-* [Documentation](https://rrwen.github.io/twitter2mongodb-cli)
-
 Command line tool for extracting Twitter data to MongoDB databases
 
 [![npm version](https://badge.fury.io/js/twitter2mongodb-cli.svg)](https://badge.fury.io/js/twitter2mongodb-cli)
@@ -33,7 +31,7 @@ An example usage of twitter2mongodb-cli:
 var twitter2mongodbcli = require('twitter2mongodb-cli');
 ```
 
-See [Documentation](https://rrwen.github.io/twitter2mongodb-cli) for more details.
+See [twitter2mongodb](https://www.npmjs.com/package/twitter2mongodb) for programmatic usage.
 
 ## Contributions
 
