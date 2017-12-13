@@ -86,7 +86,7 @@ Setup default MongoDB options:
 
 1. Set database to store streamed Twitter data
 2. Set collection to store streamed Twitter data
-3. Set [insert query](https://www.postgresql.org/docs/current/static/sql-insert.html) for streamed Twitter data
+3. Set MongoDB [query method](https://mongodb.github.io/node-mongodb-native/3.0/api/Collection) for streamed Twitter data
 4. Set [jsonata](https://www.npmjs.com/package/jsonata) filter before inserting
 
 ```
@@ -120,7 +120,7 @@ Setup default MongoDB options:
 
 1. Set database to store streamed Twitter data
 2. Set collection to store streamed Twitter data
-3. Set [insert query](https://www.postgresql.org/docs/current/static/sql-insert.html) for streamed Twitter data
+3. Set MongoDB [query method](https://mongodb.github.io/node-mongodb-native/3.0/api/Collection) for streamed Twitter data
 
 ```
 twitter2mongodb set mongodb.database twitter2mongodb_database
