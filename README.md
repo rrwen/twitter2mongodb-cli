@@ -17,7 +17,7 @@ Command line tool for extracting Twitter data to MongoDB databases
 2. Install [twitter2mongodb-cli](https://www.npmjs.com/package/twitter2mongodb-cli) via `npm`
 
 ```
-npm install --save twitter2mongodb-cli
+npm install -g twitter2mongodb-cli
 ```
 
 For the latest developer version, see [Developer Install](#developer-install).
