@@ -167,8 +167,8 @@ npm | Purpose
 
 ```
 yargs
-   |--- twitter2pg   <-- default command
+   |--- twitter2mongodb   <-- default command
    |--- dotenv       <-- file
    |--- opn          <-- doc
-   |--- pg           <-- query
+   |--- mongodb           <-- query
 ```
