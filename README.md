@@ -168,8 +168,8 @@ npm | Purpose
 ```
 yargs
    |--- twitter2mongodb   <-- default command
-   |--- dotenv       <-- file
-   |--- opn          <-- doc
+   |--- dotenv            <-- file
+   |--- opn               <-- doc
    |--- mongodb           <-- query
-   |--- parse-mongo-url    <-- parse MongoDB url for info
+   |--- parse-mongo-url   <-- parse MongoDB url for info
 ```
