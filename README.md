@@ -24,13 +24,127 @@ For the latest developer version, see [Developer Install](#developer-install).
 
 ## Usage
 
-An example usage of twitter2mongodb-cli:
+Get help:
 
 ```
-var twitter2mongodbcli = require('twitter2mongodb-cli');
+twitter2mongodb --help
+```
+
+Open documentation in web browser:
+
+```
+twitter2mongodb doc twitter2mongodb
+twitter2mongodb doc twitter
+twitter2mongodb doc mongodb
 ```
 
 See [twitter2mongodb](https://www.npmjs.com/package/twitter2mongodb) for programmatic usage.
+
+### Environment File
+
+Create a template `.env` file for Twitter and MongoDB details:
+
+* Edit this file with your [Twitter API credentials](https://apps.twitter.com/) and [MongoDB details](https://docs.mongodb.com/manual/reference/connection-string/)
+
+```
+twitter2mongodb file path/to/.env
+```
+
+Set default for the `.env` file:
+
+* Every `twitter2mongodb` command will now use the designated `.env` file
+
+```
+twitter2mongodb set file path/to/.env
+```
+
+### MongoDB Query
+
+Send a query to a MongoDB database after defining and setting the default [Environment File](#environment-file).  
+  
+An example of a `find` query for all documents:
+
+```
+twitter2mongodb query find {}
+```
+
+### REST API
+
+Setup default twitter options:
+
+1. Set Twitter REST method (one of `get`, `post`, `delete` or `stream`)
+2. Set [Twitter path](https://developer.twitter.com/en/docs/api-reference-index)
+3. Set Twitter parameters for path
+
+```
+twitter2mongodb set twitter.method get
+twitter2mongodb set twitter.path search/tweets
+twitter2mongodb set twitter.params "{\"q\":\"twitter\"}"
+```
+
+Setup default MongoDB options:
+
+1. Set database to store streamed Twitter data
+2. Set collection to store streamed Twitter data
+3. Set [insert query](https://www.postgresql.org/docs/current/static/sql-insert.html) for streamed Twitter data
+4. Set [jsonata](https://www.npmjs.com/package/jsonata) filter before inserting
+
+```
+twitter2mongodb set mongodb.database twitter2mongodb_database
+twitter2mongodb set mongodb.collection twitter_data
+twitter2mongodb set mongodb.method insertMany
+twitter2mongodb set jsonata statuses
+```
+
+Extract Twitter data into MongoDB collection given setup options:
+
+```
+twitter2mongodb > log.csv
+```
+
+### Stream API
+
+Setup default twitter options:
+
+1. Set Twitter stream method
+2. Set Twitter path
+3. Set [Twitter stream parameters](https://developer.twitter.com/en/docs/tweets/filter-realtime/api-reference/post-statuses-filter.html)
+
+```
+twitter2mongodb set twitter.method stream
+twitter2mongodb set twitter.path statuses/filter
+twitter2mongodb set twitter.params "{\"track\":\"twitter\"}"
+```
+
+Setup default MongoDB options:
+
+1. Set database to store streamed Twitter data
+2. Set collection to store streamed Twitter data
+3. Set [insert query](https://www.postgresql.org/docs/current/static/sql-insert.html) for streamed Twitter data
+
+```
+twitter2mongodb set mongodb.database twitter2mongodb_database
+twitter2mongodb set mongodb.collection twitter_data
+twitter2mongodb set mongodb.method insertOne
+```
+
+Stream Twitter data into MongoDB collection given setup options:
+
+```
+twitter2mongodb > log.csv
+```
+
+Stream Twitter data into a MongoDB collection as a service:
+
+1. Save a [node](https://nodejs.org/api/cli.html) runnable script of the current options
+2. Install [pm2](https://www.npmjs.com/package/pm2) (`npm install pm2 -g`)
+2. Use `pm2`  to run the saved script as a service
+
+```
+twitter2mongodb save path/to/script.js
+pm2 start path/to/script.js
+pm2 save
+```
 
 ## Contributions
 
