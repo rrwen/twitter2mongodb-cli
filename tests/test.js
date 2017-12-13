@@ -150,6 +150,7 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
 									}
 									t.pass('(B) drop database');
 									client.close();
+									process.exit(0);
 								});
 							});
 						});
