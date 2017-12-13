@@ -157,14 +157,20 @@ npm publish
 
 ### Implementation
 
-A description of the overall implementation of twitter2mongodb-cli.
+The module [twitter2mongodb-cli](https://www.npmjs.com/package/twitter2mongodb-cli) uses the following [npm](https://www.npmjs.com/) packages for its implementation:
+
+npm | Purpose
+--- | ---
+[yargs](https://www.npmjs.com/package/yargs) | Command line builder and parser
+[twitter2mongodb](https://www.npmjs.com/package/twitter2mongodb) | Extracts Twitter data to MongoDB
+[dotenv](https://www.npmjs.com/package/dotenv) | Load environmental variables from a file
+[opn](https://www.npmjs.com/package/opn) | Open online browser documentation
+[mongodb](https://www.npmjs.com/package/mongodb) | Send queries to MongoDB database
 
 ```
-component   <-- detail
-    |
-component   <-- detail
-    |
-component   <-- detail
-    |
-component   <-- detail
+yargs
+   |--- twitter2pg   <-- default command
+   |--- dotenv       <-- file
+   |--- opn          <-- doc
+   |--- pg           <-- query
 ```
