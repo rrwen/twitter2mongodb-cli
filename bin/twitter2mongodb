@@ -28,7 +28,7 @@ var argv = require('yargs')
 	.describe('twitter.method', 'get/post/delete/stream')
 	.describe('twitter.path', 'API path')
 	.describe('twitter.params', 'API request parameters')
-	.describe('mongodb.database', 'database name')
+	.describe('mongodb.method', 'MongoDB query method')
 	.describe('mongodb.collection', 'collection name')
 	.describe('jsonata', 'JSON filter before pg.query')
 	.describe('twitter.connection', 'Twitter API keys')
@@ -37,6 +37,7 @@ var argv = require('yargs')
 	.describe('twitter.connection.access_token_key', '')
 	.describe('twitter.connection.access_token_secret', '')
 	.describe('mongodb.connection', 'MongoDB connection URL')
+	.describe('mongodb.database', 'database name')
 	.alias('l', 'log')
 	.describe('log', 'Log to file.csv')
 	.alias('v', 'verbose')
@@ -77,28 +78,41 @@ if (cmd == 'doc') {
 
 // (command_query) Run query in PostgreSQL
 if (cmd == 'query') {
-	const {Client} = require('mongodb').MongoClient;
-	argv.pg = argv.pg || {};
-	argv.pg.connection = argv.pg.connection || {};
-	const client = new Client(argv.pg.connection);
-	client.connect()
-		.then(() => {
-			return client.query(argv.sql)
-				.then(res => {
-					console.log(res.rows);
-				});
-		})
-		.then(() => {
-			client.end();
-			process.exit(0);
-		})
-		.catch(err => {
-			console.error('\nError:\n', err.message);
+	var MongoClient = require('mongodb').MongoClient;
+	argv.mongodb = argv.mongodb || {};
+	argv.mongodb.connection = argv.mongodb.connection || process.env.MONGODB_CONNECTION || 'mongodb://localhost:27017';
+	argv.mongodb.database = argv.mongodb.database ||  process.env.MONGODB_DATABASE || 'test';
+	argv.mongodb.collection = argv.mongodb.collection || process.env.MONGODB_COLLECTION || 'twitter_data';
+	MongoClient.connect(argv.mongodb.connection, function(err, client) {
+		if (err) {
+			console.error(err.message);
+			client.close();
 			process.exit(1);
+		}
+		var collection = client.db(argv.mongodb.database).collection(argv.mongodb.collection);
+		argv.query = JSON.parse(argv.query);
+		collection[argv.method](argv.query, function(err, result) {
+			if (argv.method.substr(0, 4) == 'find') {
+				result.toArray(function(err, docs) {
+					if (err) {
+						console.error(err.message);
+						client.close();
+						process.exit(1);
+					}
+					console.log(docs);
+					client.close();
+					process.exit(0);
+				});
+			} else {
+				console.log(argv.method + ' query with ' + JSON.stringify(argv.query) + ' for ' + argv.mongodb.database + '.' + argv.mongodb.collection);
+				client.close();
+				process.exit(0);
+			}
 		});
+	});
 }
 
-// (command_fiule) Initialize options file
+// (command_file) Initialize options file
 if (cmd == 'file') {
 	var templatePath = path.join(__dirname, 'template.env');
 	var read = fs.createReadStream(templatePath);
@@ -117,9 +131,10 @@ if (cmd == 'reset') {
 		'twitter.method': 'get',
 		'twitter.path': 'search/tweets',
 		'twitter.params': '{"q": "twitter"}',
-		'pg.table': 'twitter_data',
-		'pg.column': 'tweets',
-		'pg.query': 'INSERT INTO $options.pg.table($options.pg.column) VALUES ($1);',
+		'mongodb.connection': 'mongodb://localhost:27017',
+		'mongodb.method': 'insertOne',
+		'mongodb.database': 'test',
+		'mongodb.collection': 'twitter_data',
 		'file': ''
 	};
 	fs.writeFileSync(defaultPath, JSON.stringify(defaultJSON));
