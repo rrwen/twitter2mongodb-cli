@@ -27,6 +27,7 @@
   "devDependencies": {
     "dotenv": "^4.0.0",
     "moment": "^2.19.1",
+    "mongodb": "^3.0.0-rc0",
     "tape": "^4.8.0"
   },
   "dependencies": {

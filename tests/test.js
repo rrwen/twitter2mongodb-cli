@@ -3,7 +3,8 @@
 
 // (packages) Package dependencies
 var fs = require('fs');
-var moment = require('moment'); 
+var moment = require('moment');
+var MongoClient = require('mongodb').MongoClient;
 var test = require('tape');
 
 const {spawn} = require('child_process');
@@ -117,6 +118,42 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
 				});
 				child.on('close', code => {
 					t.equals(code, 0, '(A) reset');
+					
+					// (test_twitter2mongodb_get) Test twitter2mongodb GET
+					var child = spawn('node', ['./bin/twitter2mongodb', '--file', '../.env', '--mongodb.database', process.env.MONGODB_TESTDATABASE]);
+					child.stderr.on('data', data => {
+						t.fail('(B) twitter2mongodb GET: ' + data.toString('utf8'));
+					});
+					child.on('close', code => {
+						t.comment('(B) twitter2mongodb tests');
+						t.equals(code, 0, '(B) twitter2mongodb GET');
+						
+						// (test_twitter2mongodb_stream) Test twitter2mongodb STREAM
+						var child = spawn('node', ['./bin/twitter2mongodb', '--twitter.method stream', '--twitter.path statuses/filter', '--twitter.params "{\"track\": \"twitter\"}"', '--file', '../.env', '--mongodb.database', process.env.MONGODB_TESTDATABASE]);
+						child.stderr.on('data', data => {
+							t.fail('(B) twitter2mongodb STREAM: ' + data.toString('utf8'));
+						});
+						child.stdout.on('data', data => {
+							t.pass('(B) twitter2mongodb STREAM');
+							
+							// (test_db_drop) Drop test database
+							MongoClient.connect(process.env.MONGODB_CONNECTION, function(err, client) {
+								if (err) {
+									t.fail('(B) drop database: ' + err.message);
+									process.exit(1);
+								}
+								var db = client.db(process.env.MONGODB_TESTDATABASE);
+								db.dropDatabase(function(err, result) {
+									if (err) {
+										t.fail('(B) drop database: ' + err.message);
+										process.exit(1);
+									}
+									t.pass('(B) drop database');
+									client.close();
+								});
+							});
+						});
+					});
 				});
 			});
 		});
@@ -131,50 +168,5 @@ test('Tests for ' + json.name + ' (' + json.version + ')', t => {
 		t.equals(code, 0, '(A) save');
 	});
 	
-	// (test_twitter2mongodb) twitter2mongodb tests
-	t.comment('(B) twitter2mongodb tests');
-	if (err) {
-		t.fail( '(B) find docs in collection: '+ err);
-		process.exit(-1);
-	}
-	process.env.mongodbDATABASE = process.env.mongodbTESTDATABASE;
-	t.pass('(B) find docs in collection');
-	
-	// (test_query_create) Test query CREATE
-	var child = spawn('node', ['./bin/twitter2mongodb', 'query', 'find', '{}']);
-	child.stderr.on('data', data => {
-		t.fail('(B) query find docs in collection: ' + data.toString('utf8'));
-	});
-	child.on('close', code => {
-		t.equals(code, 0, '(B) query CREATE');
-		
-		// (test_twitter2mongodb_get) Test twitter2mongodb GET
-		var child = spawn('node', ['./bin/twitter2mongodb']);
-		child.stderr.on('data', data => {
-			t.fail('(B) twitter2mongodb GET: ' + data.toString('utf8'));
-		});
-		child.on('close', code => {
-			t.equals(code, 0, '(B) twitter2mongodb GET');
-			
-			// (test_twitter2mongodb_stream) Test twitter2mongodb STREAM
-			var child = spawn('node', ['./bin/twitter2mongodb', '--twitter.method stream', '--twitter.path statuses/filter', '--twitter.params "{\"track\": \"twitter\"}"']);
-			child.stderr.on('data', data => {
-				t.fail('(B) twitter2mongodb STREAM: ' + data.toString('utf8'));
-			});
-			child.stdout.on('data', data => {
-				t.pass('(B) twitter2mongodb STREAM');
-				
-				// (test_db_drop) Drop test database
-				mongodbtools.dropdb(config, process.env.mongodbTESTDATABASE, function (err, res) {
-					if (err) {
-						t.fail( '(B) DROP test database: '+ err);
-						process.exit(-1);
-					}
-					t.pass('(B) DROP test database');
-					process.exit(0);
-				});
-			});
-		});
-	});
 	t.end();
 });
