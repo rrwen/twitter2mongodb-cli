@@ -1,6 +1,7 @@
 // Richard Wen
 // rrwen.dev@gmail.com
 
+var parseMongoUrl = require('parse-mongo-url');
 var twitter2mongodb = require('twitter2mongodb');
 
 module.exports = function(argv) {
@@ -11,29 +12,32 @@ module.exports = function(argv) {
 	}
 	
 	// (command_run_options) Default run options
+	argv = argv || {};
 	argv.twitter = argv.twitter || {};
 	argv.twitter.method = argv.twitter.method || process.env.TWITTER_METHOD || 'get';
 	argv.twitter.path =argv.twitter.path || process.env.TWITTER_PATH || 'search/tweets';
 	argv.twitter.params = argv.twitter.params || process.env.TWITTER_PARAMS || {q:'twitter'};
-	argv.pg.table = argv.pg.table || process.env.PGTABLE || 'twitter2mongodb_table';
-	argv.pg.column = argv.pg.column || process.env.PGCOLUMN || 'tweets';
-	argv.pg.query = argv.pg.query || process.env.PGQUERY || 'INSERT INTO $options.pg.table ($options.pg.column) VALUES ($1);';
+	argv.mongodb = argv.mongodb || {};
+	argv.mongodb.database = argv.mongodb.database || process.env.MONGODB_DATABASE|| 'test';
+	argv.mongodb.collection = argv.mongodb.collection || process.env.MONGODB_COLLECTION || 'tweet_data';
+	argv.mongodb.connection = argv.mongodb.connection || process.env.MONGODB_CONNECTION || 'mongodb://@localhost:27017';
 	
 	// (command_run_info) Information JSON
 	var quote = '"';
 	var delim = ",";
+	var parsed = parseMongoUrl(argv.mongodb.connection);
 	var info = {
 		twitter: {
 			method: argv.twitter.method,
 			path: argv.twitter.path,
 			params: argv.twitter.params
 		},
-		pg: {
-			table: argv.pg.table,
-			column: argv.pg.column,
-			query: argv.pg.query
+		mongodb: {
+			connection: parsed.servers,
+			database: argv.mongodb.database,
+			collection: argv.mongodb.collection
 		}
-	}
+	};
 	header = 'time_iso8601' + delim + 'status' + delim + 'message' + delim + 'json\n'
 	info = quote + new Date().toISOString() + quote + delim + quote + 'start' + quote + delim  + quote + 'Options' + quote + delim + quote + JSON.stringify(info).replace(/"/g, '""') + quote;
 	console.log(header + info);
@@ -61,7 +65,7 @@ module.exports = function(argv) {
 				if (argv.verbose) {
 					console.log(quote + new Date().toISOString() + quote + delim + quote + 'success' + quote + delim + delim);
 				}
-				data.pg.client.end();
+				data.mongodb.client.close();
 				process.exit(0);
 			})
 			.catch(err => {

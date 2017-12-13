@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "description": "Command line tool for extracting Twitter data to MongoDB databases",
   "main": "index.js",
+  "bin": {
+    "twitter2mongodb": "bin/twitter2mongodb"
+  },
   "scripts": {
-    "coverage": "istanbul cover node_modules/tape/bin/tape tests/test.js && cat ./coverage/lcov.info | coveralls",
     "docs": "documentation build */**.js -f html -o docs",
-    "istanbul": "istanbul cover node_modules/tape/bin/tape tests/test.js",
     "test": "node ./tests/test.js"
   },
   "directories": {
@@ -24,17 +25,16 @@
   },
   "homepage": "https://github.com/rrwen/twitter2mongodb-cli#readme",
   "devDependencies": {
-    "coveralls": "^3.0.0",
-    "documentation": "^5.3.3",
-    "istanbul": "^0.4.5",
     "moment": "^2.19.1",
     "tape": "^4.8.0"
   },
   "dependencies": {
     "dotenv": "^4.0.0",
     "opn": "^5.1.0",
+    "parse-mongo-url": "^1.1.1",
     "pg": "^7.4.0",
-    "twitter2mongodb": "0.0.0"
+    "twitter2mongodb": "0.0.0",
+    "yargs": "^10.0.3"
   },
   "keywords": [
     "twitter",
