@@ -52,7 +52,7 @@ var argv = require('yargs')
 	.example('$0 defaults', 'View option defaults')
 	.example('\n$0 query find {}', '\nFind all in collection')
 	.example('\n$0', '\nExtract twitter data to collection')
-	.example('$0 -l log.csv', 'Extract and log twitter data to collection')
+	.example('$0 > log.csv', 'Extract and log twitter data to collection')
 	.example('$0 save path/script.js', 'Save script with options')
 	.argv;
 var cmd = argv._[0];
