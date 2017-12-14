@@ -38,9 +38,8 @@ module.exports = function(argv) {
 			collection: argv.mongodb.collection
 		}
 	};
-	header = 'time_iso8601' + delim + 'status' + delim + 'message' + delim + 'json\n'
 	info = quote + new Date().toISOString() + quote + delim + quote + 'start' + quote + delim  + quote + 'Options' + quote + delim + quote + JSON.stringify(info).replace(/"/g, '""') + quote;
-	console.log(header + info);
+	console.log(info);
 	
 	// (command_stream) Twitter stream API
 	if (argv.twitter.method == 'stream') {
