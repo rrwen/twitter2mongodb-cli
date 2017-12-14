@@ -1,6 +1,6 @@
 {
   "name": "twitter2mongodb-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Command line tool for extracting Twitter data to MongoDB databases",
   "main": "index.js",
   "bin": {

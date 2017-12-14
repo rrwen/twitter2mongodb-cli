@@ -148,7 +148,7 @@ pm2 save
 
 ### Logs
 
-The logs are in the following format:
+The logs are in the following Comma-Separated Values (CSV) format:
 
 * `time_iso8601`: Time and date in [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format
 * `status`: Status of the log
@@ -156,6 +156,7 @@ The logs are in the following format:
 * `json`: [JSON](https://www.json.org/) object containing relevant debugging information
 
 time_iso8601 | status | message | json
+--- | --- | --- | ---
 ... | ... | ... | ...
 
 ## Contributions
