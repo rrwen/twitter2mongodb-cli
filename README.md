@@ -43,9 +43,17 @@ See [twitter2mongodb](https://www.npmjs.com/package/twitter2mongodb) for program
 
 ### Environment File
 
-An environment file `.env` is used to store [Twitter API credentials](https://apps.twitter.com/) and [MongoDB details](https://docs.mongodb.com/manual/reference/connection-string/).
+An environment file `.env` is used to store [Twitter API credentials](https://apps.twitter.com/) and [MongoDB details](https://docs.mongodb.com/manual/reference/connection-string/).  
+  
+**Step 1.** Set the default config for the `.env` file:
 
-Set [Twitter API credentials](https://apps.twitter.com/)
+* Every `twitter2mongodb` command will now use the designated `.env` file
+
+```
+twitter2mongodb config set env path/to/.env
+```
+
+**Step 2.** Set [Twitter API credentials](https://apps.twitter.com/)
 
 ```
 twitter2mongodb env set TWITTER_CONSUMER_KEY ***
@@ -54,33 +62,17 @@ twitter2mongodb env set TWITTER_ACCESS_TOKEN_KEY ***
 twitter2mongodb env set TWITTER_ACCESS_TOKEN_SECRET ***
 ```
 
-Set [MongoDB connection](https://docs.mongodb.com/manual/reference/connection-string/)
+**Step 3.** Set [MongoDB connection](https://docs.mongodb.com/manual/reference/connection-string/)
 
 ```
 twitter2mongodb env set MONGODB_CONNECTION mongodb://localhost:27017
 ```
 
-Set the default config for the `.env` file:
-
-* Every `twitter2mongodb` command will now use the designated `.env` file
-
-```
-twitter2mongodb config set file path/to/.env
-```
-
-### MongoDB Query
-
-Send a query to a MongoDB database after defining and setting the default [Environment File](#environment-file).  
-  
-An example of a `find` query for all documents:
-
-```
-twitter2mongodb query find {}
-```
-
 ### REST API
 
-Setup default twitter options:
+The REST API obtains Twitter data in batches using search queries.  
+  
+**Step 1.** Setup default twitter options:
 
 1. Set Twitter REST method (one of `get`, `post`, `delete` or `stream`)
 2. Set [Twitter path](https://developer.twitter.com/en/docs/api-reference-index)
@@ -92,7 +84,7 @@ twitter2mongodb config set twitter.path search/tweets
 twitter2mongodb config set twitter.params "{\"q\":\"twitter\"}"
 ```
 
-Setup default MongoDB options:
+**Step 2.** Setup default MongoDB options:
 
 1. Set database to store streamed Twitter data
 2. Set collection to store streamed Twitter data
@@ -106,7 +98,7 @@ twitter2mongodb config set mongodb.method insertMany
 twitter2mongodb config set jsonata statuses
 ```
 
-Extract Twitter data into MongoDB collection given setup options:
+**Step 3.** Extract Twitter data into MongoDB collection given setup options:
 
 ```
 twitter2mongodb > log.csv
@@ -114,7 +106,9 @@ twitter2mongodb > log.csv
 
 ### Stream API
 
-Setup default twitter options:
+The Stream API obtains Twitter data in real-time using tracking filters.
+  
+**Step 1.** Setup default twitter options:
 
 1. Set Twitter stream method
 2. Set Twitter path
@@ -126,7 +120,7 @@ twitter2mongodb config set twitter.path statuses/filter
 twitter2mongodb config set twitter.params "{\"track\":\"twitter\"}"
 ```
 
-Setup default MongoDB options:
+**Step 2.** Setup default MongoDB options:
 
 1. Set database to store streamed Twitter data
 2. Set collection to store streamed Twitter data
@@ -138,13 +132,13 @@ twitter2mongodb config set mongodb.collection twitter_data
 twitter2mongodb config set mongodb.method insertOne
 ```
 
-Stream Twitter data into MongoDB collection given setup options:
+**Step 3a.** Stream Twitter data into MongoDB collection given setup options:
 
 ```
 twitter2mongodb > log.csv
 ```
 
-Stream Twitter data into a MongoDB collection as a service:
+**Step 3b.** Stream Twitter data into a MongoDB collection as a service:
 
 1. Save a [node](https://nodejs.org/api/cli.html) runnable script of the current options
 2. Install [pm2](https://www.npmjs.com/package/pm2) (`npm install pm2 -g`)
