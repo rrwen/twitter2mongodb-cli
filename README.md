@@ -43,20 +43,29 @@ See [twitter2mongodb](https://www.npmjs.com/package/twitter2mongodb) for program
 
 ### Environment File
 
-Create a template `.env` file for Twitter and MongoDB details:
+An environment file `.env` is used to store [Twitter API credentials](https://apps.twitter.com/) and [MongoDB details](https://docs.mongodb.com/manual/reference/connection-string/).
 
-* Edit this file with your [Twitter API credentials](https://apps.twitter.com/) and [MongoDB details](https://docs.mongodb.com/manual/reference/connection-string/)
+Set [Twitter API credentials](https://apps.twitter.com/)
 
 ```
-twitter2mongodb file path/to/.env
+twitter2mongodb env set TWITTER_CONSUMER_KEY ***
+twitter2mongodb env set TWITTER_CONSUMER_SECRET ***
+twitter2mongodb env set TWITTER_ACCESS_TOKEN_KEY ***
+twitter2mongodb env set TWITTER_ACCESS_TOKEN_SECRET ***
 ```
 
-Set default for the `.env` file:
+Set [MongoDB connection](https://docs.mongodb.com/manual/reference/connection-string/)
+
+```
+twitter2mongodb env set MONGODB_CONNECTION mongodb://localhost:27017
+```
+
+Set the default config for the `.env` file:
 
 * Every `twitter2mongodb` command will now use the designated `.env` file
 
 ```
-twitter2mongodb set file path/to/.env
+twitter2mongodb config set file path/to/.env
 ```
 
 ### MongoDB Query
@@ -78,9 +87,9 @@ Setup default twitter options:
 3. Set Twitter parameters for path
 
 ```
-twitter2mongodb set twitter.method get
-twitter2mongodb set twitter.path search/tweets
-twitter2mongodb set twitter.params "{\"q\":\"twitter\"}"
+twitter2mongodb config set twitter.method get
+twitter2mongodb config set twitter.path search/tweets
+twitter2mongodb config set twitter.params "{\"q\":\"twitter\"}"
 ```
 
 Setup default MongoDB options:
@@ -91,10 +100,10 @@ Setup default MongoDB options:
 4. Set [jsonata](https://www.npmjs.com/package/jsonata) filter before inserting
 
 ```
-twitter2mongodb set mongodb.database twitter2mongodb_database
-twitter2mongodb set mongodb.collection twitter_data
-twitter2mongodb set mongodb.method insertMany
-twitter2mongodb set jsonata statuses
+twitter2mongodb config set mongodb.database twitter2mongodb_database
+twitter2mongodb config set mongodb.collection twitter_data
+twitter2mongodb config set mongodb.method insertMany
+twitter2mongodb config set jsonata statuses
 ```
 
 Extract Twitter data into MongoDB collection given setup options:
@@ -112,9 +121,9 @@ Setup default twitter options:
 3. Set [Twitter stream parameters](https://developer.twitter.com/en/docs/tweets/filter-realtime/api-reference/post-statuses-filter.html)
 
 ```
-twitter2mongodb set twitter.method stream
-twitter2mongodb set twitter.path statuses/filter
-twitter2mongodb set twitter.params "{\"track\":\"twitter\"}"
+twitter2mongodb config set twitter.method stream
+twitter2mongodb config set twitter.path statuses/filter
+twitter2mongodb config set twitter.params "{\"track\":\"twitter\"}"
 ```
 
 Setup default MongoDB options:
@@ -124,9 +133,9 @@ Setup default MongoDB options:
 3. Set MongoDB [query method](https://mongodb.github.io/node-mongodb-native/3.0/api/Collection) for streamed Twitter data
 
 ```
-twitter2mongodb set mongodb.database twitter2mongodb_database
-twitter2mongodb set mongodb.collection twitter_data
-twitter2mongodb set mongodb.method insertOne
+twitter2mongodb config set mongodb.database twitter2mongodb_database
+twitter2mongodb config set mongodb.collection twitter_data
+twitter2mongodb config set mongodb.method insertOne
 ```
 
 Stream Twitter data into MongoDB collection given setup options:
