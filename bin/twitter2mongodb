@@ -7,24 +7,37 @@ var fs = require('fs');
 var path = require('path');
 var twitter2mongodbcli = require(path.join(__dirname, '../index.js'));
 
-var defaultPath = path.join(__dirname, 'default.json');
-var defaultJSON = require(defaultPath);
+// (cli_command) Setup config and env commands
+var config = require('yargs-command-config')({
+	file: path.join(__dirname, 'config.json'),
+	defaults: {
+		'twitter.method': 'get',
+		'twitter.path': 'search/tweets',
+		'twitter.params': '{"q":"twitter"}'
+	}
+});
+var env = require('yargs-command-env')({
+	file: '.env',
+	defaults: {
+		TWITTER_CONSUMER_KEY: '***',
+		TWITTER_CONSUMER_SECRET: '***',
+		TWITTER_ACCESS_TOKEN_KEY: '***',
+		TWITTER_ACCESS_TOKEN_SECRET: '***',
+		MONGODB_CONNECTION: 'mongodb://localhost:27017',
+		MONGODB_TESTDATABASE: 'twitter_database',
+		MONGODB_COLLECTION: 'twitter_data'
+	}
+});
 
 // (cli) Command line config
 var argv = require('yargs')
-	.default(defaultJSON)
 	.usage('\nCommand line tool for extracting Twitter data to MongoDB databases.\n\nUsage: \n\  $0 <command>\n\  $0 [options]')
-	.command('clear', 'Clear default options')
-	.command('defaults', 'View default options')
-	.command('delete <option>', 'Delete default options')
+	.command(config)
+	.command(env)
 	.command('doc <type>', 'Open documentation in web browser')
-	.command('file <path>', 'Initialize environment file')
-	.command('reset', 'Reset default options')
 	.command('save <script>', 'Save script with current options')
-	.command('set <option> <value>', 'Set default options')
 	.command('query <method> <query>', 'Run a MongoDB query')
-	.alias('f', 'file')
-	.describe('file', 'Path to environment file for storing API keys and connections')
+	.describe('env', 'Path to environment file for storing API keys and connections')
 	.describe('twitter.method', 'get/post/delete/stream')
 	.describe('twitter.path', 'API path')
 	.describe('twitter.params', 'API request parameters')
@@ -46,21 +59,14 @@ var argv = require('yargs')
 	.example('$0 doc twitter2mongodb', 'Open twitter2mongodb-cli doc')
 	.example('$0 doc twitter', 'Open Twitter API doc')
 	.example('$0 doc mongodb', 'Open MongoDB doc')
-	.example('\n$0 file path/.env', '\nInitialize env file')
-	.example('$0 set file path/.env', 'Set default path for env file')
-	.example('$0 delete file', 'Delete default env file path')
-	.example('$0 defaults', 'View option defaults')
+	.example('$0 config view', 'View config defaults')
+	.example('$0 env view', 'View env defaults')
 	.example('\n$0 query find {}', '\nFind all in collection')
 	.example('\n$0', '\nExtract twitter data to collection')
 	.example('$0 > log.csv', 'Extract and log twitter data to collection')
 	.example('$0 save path/script.js', 'Save script with options')
 	.argv;
 var cmd = argv._[0];
-
-// (options_file) Load options file
-if (argv.file != undefined) {
-	require('dotenv').config({path: argv.file});
-}
 
 // (command_doc) Open docs in browser
 if (cmd == 'doc') {
@@ -74,7 +80,7 @@ if (cmd == 'doc') {
 	}
 }
 
-// (command_query) Run query in PostgreSQL
+// (command_query) Run query in MongoDB
 if (cmd == 'query') {
 	var MongoClient = require('mongodb').MongoClient;
 	argv.mongodb = argv.mongodb || {};
@@ -110,56 +116,6 @@ if (cmd == 'query') {
 	});
 }
 
-// (command_file) Initialize options file
-if (cmd == 'file') {
-	var templatePath = path.join(__dirname, 'template.env');
-	var read = fs.createReadStream(templatePath);
-	var write = fs.createWriteStream(argv.path);
-	read.pipe(write);
-}
-
-// (command_defaults) View default options
-if (cmd == 'defaults') {
-	console.log(defaultJSON);
-}
-
-// (command_reset) Reset default options
-if (cmd == 'reset') {
-	defaultJSON = {
-		'twitter.method': 'get',
-		'twitter.path': 'search/tweets',
-		'twitter.params': '{"q": "twitter"}',
-		'mongodb.connection': 'mongodb://localhost:27017',
-		'mongodb.method': 'insertOne',
-		'mongodb.database': 'test',
-		'mongodb.collection': 'twitter_data',
-		'file': ''
-	};
-	fs.writeFileSync(defaultPath, JSON.stringify(defaultJSON));
-	console.log('Reset defaults');
-}
-
-// (command_clear) Clear default options
-if (cmd == 'clear') {
-	defaultJSON = {};
-	fs.writeFileSync(defaultPath, JSON.stringify(defaultJSON));
-	console.log('Clear defaults');
-}
-
-// (command_set) Set default options
-if (cmd == 'set') {
-	defaultJSON[argv.option] = argv.value;
-	fs.writeFileSync(defaultPath, JSON.stringify(defaultJSON));
-	console.log('Set default', argv.option, 'to', argv.value);
-}
-
-// (command_delete) Delete default options
-if (cmd == 'delete') {
-	delete defaultJSON[argv.option];
-	fs.writeFileSync(defaultPath, JSON.stringify(defaultJSON));
-	console.log('Delete default', argv.option);
-}
-
 // (command) Run twitter2mongodb
 if (argv._.length < 1) {
 	twitter2mongodbcli(argv);
@@ -167,7 +123,6 @@ if (argv._.length < 1) {
 
 // (command_save) Save runnable script with current options
 if (cmd == 'save') {
-	delete argv._;
 	var scriptPath = argv.script;
 	var script = '// Created with command `twitter2mongodb save <script>`\n// See twitter2mongodb-cli (https://www.npmjs.com/package/twitter2mongodb-cli)\n\n' + 'var twitter2mongodbcli = require(\'' + path.join(__dirname, '../index.js').replace(/\\/g,"/") + '' + '\');\n\n'  + 'var argv = ' + JSON.stringify(argv, null, 4) + ';\n\ntwitter2mongodbcli(argv);\n';
 	fs.writeFile(scriptPath, script, function (err) {

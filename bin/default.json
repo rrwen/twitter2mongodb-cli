@@ -1,1 +1,0 @@
-{"twitter.method":"get","twitter.path":"search/tweets","twitter.params":"{\"q\": \"twitter\"}","mongodb.connection":"mongodb://localhost:27017","mongodb.method":"insertOne","mongodb.database":"test","mongodb.collection":"twitter_data","file":""}
