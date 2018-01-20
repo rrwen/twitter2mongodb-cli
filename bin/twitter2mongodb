@@ -3,40 +3,69 @@
 // Richard Wen
 // rrwen.dev@gmail.com
 
+var envfile = require('envfile');
 var fs = require('fs');
 var path = require('path');
 var twitter2mongodbcli = require(path.join(__dirname, '../index.js'));
 
-// (cli_command) Setup config and env commands
-var config = require('yargs-command-config')({
-	file: path.join(__dirname, 'config.json'),
-	defaults: {
-		'twitter.method': 'get',
-		'twitter.path': 'search/tweets',
-		'twitter.params': '{"q":"twitter"}'
-	}
+// (cli_config_base) Setup base config file
+var baseConfigFile = path.join(__dirname, 'config.json');
+var configDefaults = {
+	'twitter.method': 'get',
+	'twitter.path': 'search/tweets',
+	'twitter.params': '{"q":"twitter"}',
+	'config': baseConfigFile,
+	'env': './.env'
+};
+if (!fs.existsSync(baseConfigFile)) {
+	fs.writeFileSync(baseConfigFile, JSON.stringify(configDefaults));
+}
+var baseConfig = JSON.parse(fs.readFileSync(baseConfigFile)) || {};
+
+// (cli_config) Setup config file
+var configFile = baseConfig.config;
+if (!fs.existsSync(configFile)) {
+	fs.writeFileSync(configFile, JSON.stringify(configDefaults));
+}
+var config = JSON.parse(fs.readFileSync(configFile));
+for (var k in configDefaults) {
+	config[k] = config[k] || configDefaults[k];
+};
+
+// (cli_env) Setup env file
+var envFile = config.env || './.env';
+var envDefaults = {
+	TWITTER_CONSUMER_KEY: '***',
+	TWITTER_CONSUMER_SECRET: '***',
+	TWITTER_ACCESS_TOKEN_KEY: '***',
+	TWITTER_ACCESS_TOKEN_SECRET: '***',
+	MONGODB_CONNECTION: 'mongodb://localhost:27017',
+	MONGODB_DATABASE: 'twitter_database',
+	MONGODB_COLLECTION: 'twitter_data'
+};
+if (!fs.existsSync(envFile)) {
+	fs.writeFileSync(envFile, envfile.stringifySync(envDefaults));
+}
+require('dotenv').config({path: envFile || '.env'});
+
+// (cli_command) Setup config and env management commands
+var configManage = require('yargs-command-config')({
+	defaults: configDefaults
 });
-var env = require('yargs-command-env')({
-	file: '.env',
-	defaults: {
-		TWITTER_CONSUMER_KEY: '***',
-		TWITTER_CONSUMER_SECRET: '***',
-		TWITTER_ACCESS_TOKEN_KEY: '***',
-		TWITTER_ACCESS_TOKEN_SECRET: '***',
-		MONGODB_CONNECTION: 'mongodb://localhost:27017',
-		MONGODB_TESTDATABASE: 'twitter_database',
-		MONGODB_COLLECTION: 'twitter_data'
-	}
+var envManage = require('yargs-command-env')({
+	defaults: envDefaults
 });
 
 // (cli) Command line config
 var argv = require('yargs')
 	.usage('\nCommand line tool for extracting Twitter data to MongoDB databases.\n\nUsage: \n\  $0 <command>\n\  $0 [options]')
-	.command(config)
-	.command(env)
+	.config(config)
+	.command(configManage)
+	.command(envManage)
 	.command('doc <type>', 'Open documentation in web browser')
 	.command('save <script>', 'Save script with current options')
 	.command('query <method> <query>', 'Run a MongoDB query')
+	.describe('config', 'Path to default config file')
 	.describe('env', 'Path to environment file for storing API keys and connections')
 	.describe('twitter.method', 'get/post/delete/stream')
 	.describe('twitter.path', 'API path')

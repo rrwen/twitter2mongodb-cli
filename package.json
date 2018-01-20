@@ -1,6 +1,6 @@
 {
   "name": "twitter2mongodb-cli",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Command line tool for extracting Twitter data to MongoDB databases",
   "main": "index.js",
   "bin": {
@@ -25,12 +25,12 @@
   },
   "homepage": "https://github.com/rrwen/twitter2mongodb-cli#readme",
   "devDependencies": {
-    "dotenv": "^4.0.0",
     "moment": "^2.19.1",
     "mongodb": "^3.0.0-rc0",
     "tape": "^4.8.0"
   },
   "dependencies": {
+    "envfile": "^2.1.1",
     "parse-mongo-url": "^1.1.1",
     "twitter2mongodb": "0.0.0",
     "yargs": "^10.0.3",

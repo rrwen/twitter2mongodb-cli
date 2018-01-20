@@ -9,7 +9,8 @@ Command line tool for extracting Twitter data to MongoDB databases
 [![Build Status](https://travis-ci.org/rrwen/twitter2mongodb-cli.svg?branch=master)](https://travis-ci.org/rrwen/twitter2mongodb-cli)
 [![npm](https://img.shields.io/npm/dt/twitter2mongodb-cli.svg)](https://www.npmjs.com/package/twitter2mongodb-cli)
 [![GitHub license](https://img.shields.io/github/license/rrwen/twitter2mongodb-cli.svg)](https://github.com/rrwen/twitter2mongodb-cli/blob/master/LICENSE)
-[![Donate](https://img.shields.io/badge/donate-Donarbox-yellow.svg)](https://donorbox.org/rrwen)
+[![Donarbox Donate](https://img.shields.io/badge/donate-Donarbox-yellow.svg)](https://donorbox.org/rrwen)
+[![PayPal Donate](https://img.shields.io/badge/donate-PayPal-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NQNSAHK5X46D2)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/rrwen/twitter2mongodb-cli.svg?style=social)](https://twitter.com/intent/tweet?text=Command%20line%20tool%20for%20extracting%20Twitter%20data%20to%20MongoDB%20databases:%20https%3A%2F%2Fgithub.com%2Frrwen%2Ftwitter2mongodb-cli%20%23nodejs%20%23npm)
 
 ## Install
@@ -289,17 +290,31 @@ The module [twitter2mongodb-cli](https://www.npmjs.com/package/twitter2mongodb-c
 
 npm | Purpose
 --- | ---
-[yargs](https://www.npmjs.com/package/yargs) | Command line builder and parser
-[twitter2mongodb](https://www.npmjs.com/package/twitter2mongodb) | Extracts Twitter data to MongoDB
+[path](https://nodejs.org/api/path.html) | Handle file and directory paths
+[fs](https://nodejs.org/api/fs.html) | Read and write config file
+[envfile](https://www.npmjs.com/package/envfile) | Parse and write env files
 [dotenv](https://www.npmjs.com/package/dotenv) | Load environmental variables from a file
+[yargs](https://www.npmjs.com/package/yargs) | Command line builder and parser
+[yargs-command-config](https://www.npmjs.com/package/yargs-command-config) | Command for managing config files
+[yargs-command-env](https://www.npmjs.com/package/yargs-command-env) | Command for managing env files
+[twitter2mongodb](https://www.npmjs.com/package/twitter2mongodb) | Extracts Twitter data to MongoDB
 [opn](https://www.npmjs.com/package/opn) | Open online browser documentation
 [mongodb](https://www.npmjs.com/package/mongodb) | Send queries to MongoDB database
 [parse-mongo-url](https://www.npmjs.com/package/parse-mongo-url) | Parse MongoDB urls
 
 ```
+path   <-- Handle file and dir paths
+   |
+   fs    <-- Read and write config file
+   |
+envfile            <-- parse and write env file
+   |
+dotenv            <-- load env file
+   |
 yargs
+   |--- yargs-command-config   <-- manage config
+   |--- yargs-command-env   <-- manage env
    |--- twitter2mongodb   <-- default command
-   |--- dotenv            <-- file
    |--- opn               <-- doc
    |--- mongodb           <-- query
    |--- parse-mongo-url   <-- parse MongoDB url for info
