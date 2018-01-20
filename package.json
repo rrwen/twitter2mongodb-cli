@@ -7,7 +7,6 @@
     "twitter2mongodb": "bin/twitter2mongodb"
   },
   "scripts": {
-    "docs": "documentation build */**.js -f html -o docs",
     "test": "node ./tests/test.js"
   },
   "directories": {
