@@ -303,19 +303,19 @@ npm | Purpose
 [parse-mongo-url](https://www.npmjs.com/package/parse-mongo-url) | Parse MongoDB urls
 
 ```
-path   <-- Handle file and dir paths
+  path     <-- Handle file and dir paths
    |
-   fs    <-- Read and write config file
+   fs      <-- Read and write config file
    |
-envfile            <-- parse and write env file
+ envfile   <-- parse and write env file
    |
-dotenv            <-- load env file
+ dotenv    <-- load env file
    |
-yargs
+ yargs
    |--- yargs-command-config   <-- manage config
-   |--- yargs-command-env   <-- manage env
-   |--- twitter2mongodb   <-- default command
-   |--- opn               <-- doc
-   |--- mongodb           <-- query
-   |--- parse-mongo-url   <-- parse MongoDB url for info
+   |--- yargs-command-env      <-- manage env
+   |--- twitter2mongodb        <-- default command
+   |--- opn                    <-- doc
+   |--- mongodb                <-- query
+   |--- parse-mongo-url        <-- parse MongoDB url for info
 ```
