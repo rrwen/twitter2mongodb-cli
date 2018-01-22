@@ -1,0 +1,10 @@
+TAP version 13
+# Tests for twitter2mongodb-cli (1.1.4)
+# Node.js (v9.2.0)
+# Description: Command line tool for extracting Twitter data to MongoDB databases
+# Date: 2018-01-21 08:38:33
+# Dependencies: dotenv (^4.0.0), envfile (^2.1.1), parse-mongo-url (^1.1.1), twitter2mongodb (^1.0.0), yargs (^10.1.2), yargs-command-config (^1.0.5), yargs-command-env (0.0.0)
+# Developer: moment (^2.19.1), tape (^4.8.0)
+ok 1 (MAIN) twitter2mongodb GET
+ok 2 (MAIN) twitter2mongodb STREAM
+ok 3 (MAIN) drop database

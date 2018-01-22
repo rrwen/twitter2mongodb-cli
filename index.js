@@ -7,15 +7,15 @@ var twitter2mongodb = require('twitter2mongodb');
 module.exports = function(argv) {
 	
 	// (options_file) Load options file
-	if (argv.file != undefined) {
-		require('dotenv').config({path: argv.file});
+	if (argv.env != undefined) {
+		require('dotenv').config({path: argv.env});
 	}
 	
 	// (command_run_options) Default run options
 	argv = argv || {};
 	argv.twitter = argv.twitter || {};
 	argv.twitter.method = argv.twitter.method || process.env.TWITTER_METHOD || 'get';
-	argv.twitter.path =argv.twitter.path || process.env.TWITTER_PATH || 'search/tweets';
+	argv.twitter.path = argv.twitter.path || process.env.TWITTER_PATH || 'search/tweets';
 	argv.twitter.params = argv.twitter.params || process.env.TWITTER_PARAMS || {q:'twitter'};
 	argv.mongodb = argv.mongodb || {};
 	argv.mongodb.database = argv.mongodb.database || process.env.MONGODB_DATABASE|| 'test';
