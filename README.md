@@ -166,51 +166,10 @@ time_iso8601 | status | message | json
 
 ## Contributions
 
-### Report Contributions
+1. Reports for issues and suggestions can be made using the [issue submission](https://github.com/rrwen/twitter2mongodb-cli/issues) interface.
+2. Code contributions are submitted via [pull requests](https://github.com/rrwen/twitter2mongodb-cli/pulls)
 
-Reports for issues and suggestions can be made using the [issue submission](https://github.com/rrwen/twitter2mongodb-cli/issues) interface.
-
-When possible, ensure that your submission is:
-
-* **Descriptive**: has informative title, explanations, and screenshots
-* **Specific**: has details of environment (such as operating system and hardware) and software used
-* **Reproducible**: has steps, code, and examples to reproduce the issue
-
-### Code Contributions
-
-Code contributions are submitted via [pull requests](https://help.github.com/articles/about-pull-requests/):
-
-1. Ensure that you pass the [Tests](#tests)
-2. Create a new [pull request](https://github.com/rrwen/twitter2mongodb-cli/pulls)
-3. Provide an explanation of the changes
-
-A template of the code contribution explanation is provided below:
-
-```
-## Purpose
-
-The purpose can mention goals that include fixes to bugs, addition of features, and other improvements, etc.
-
-## Description
-
-The description is a short summary of the changes made such as improved speeds or features, and implementation details.
-
-## Changes
-
-The changes are a list of general edits made to the files and their respective components.
-* `file_path1`:
-	* `function_module_etc`: changed loop to map
-	* `function_module_etc`: changed variable value
-* `file_path2`:
-	* `function_module_etc`: changed loop to map
-	* `function_module_etc`: changed variable value
-
-## Notes
-
-The notes provide any additional text that do not fit into the above sections.
-```
-
-For more information, see [Developer Install](#developer-install) and [Implementation](#implementation).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ## Developer Notes
 
@@ -239,23 +198,13 @@ npm install
 1. Clone into current path `git clone https://github.com/rrwen/twitter2mongodb-cli`
 2. Enter into folder `cd twitter2mongodb-cli`
 3. Ensure [devDependencies](https://docs.npmjs.com/files/package.json#devdependencies) are installed and available
-4. Run tests
+4. Run tests with a `.env` file (see [tests/README.md](tests/README.md))
 5. Results are saved to [tests/log](tests/log) with each file corresponding to a version tested
 
 ```
 npm install
 npm test
 ```
-
-### Documentation
-
-Use [documentationjs](https://www.npmjs.com/package/documentation) to generate html documentation in the `docs` folder:
-
-```
-npm run docs
-```
-
-See [JSDoc style](http://usejsdoc.org/) for formatting syntax.
 
 ### Upload to Github
 
@@ -273,13 +222,11 @@ git push
 
 1. Update the version in `package.json`
 2. Run tests and check for OK status
-3. Generate documentation
-4. Login to npm
-5. Publish to npm
+3. Login to npm
+4. Publish to npm
 
 ```
 npm test
-npm run docs
 npm login
 npm publish
 ```

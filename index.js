@@ -42,6 +42,7 @@ module.exports = function(argv) {
 	console.log(info);
 	
 	// (command_stream) Twitter stream API
+	var msg = '';
 	if (argv.twitter.method == 'stream') {
 		
 		// (command_stream_verbose) Success log messages for streams
@@ -54,7 +55,10 @@ module.exports = function(argv) {
 		// (command_stream_run) Start streaming process and log errors
 		var stream = twitter2mongodb(argv);
 		stream.on('error', function(err) {
-			console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + err.message + quote + delim + quote + JSON.stringify(err) + quote + delim);
+			if (err.message != undefined) {
+				msg = err.message;
+			}
+			console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + msg + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
 		});
 	} else {
 		
@@ -68,7 +72,10 @@ module.exports = function(argv) {
 				process.exit(0);
 			})
 			.catch(err => {
-				console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + '' + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
+				if (err.message != undefined) {
+					msg = err.message;
+				}
+				console.error(quote + new Date().toISOString() + quote + delim + quote + 'error' + quote + delim + quote + msg + quote + delim + quote + JSON.stringify(err).replace(/"/g, '""') + quote + delim);
 				process.exit(1);
 			});
 	}

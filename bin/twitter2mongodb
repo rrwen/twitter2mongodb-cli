@@ -21,6 +21,7 @@ if (!fs.existsSync(baseConfigFile)) {
 	fs.writeFileSync(baseConfigFile, JSON.stringify(configDefaults));
 }
 var baseConfig = JSON.parse(fs.readFileSync(baseConfigFile)) || {};
+baseConfig.config = baseConfig.config || baseConfigFile;
 
 // (cli_config) Setup config file
 var configFile = baseConfig.config;
@@ -28,9 +29,24 @@ if (!fs.existsSync(configFile)) {
 	fs.writeFileSync(configFile, JSON.stringify(configDefaults));
 }
 var config = JSON.parse(fs.readFileSync(configFile));
+
+// (cli_config_default) Set config defaults
+var configChanged = false;
+for (var k in baseConfig) {
+	if (config[k] == undefined) {
+		config[k] = baseConfig[k];
+		configChanged = true;
+	}
+}
 for (var k in configDefaults) {
-	config[k] = config[k] || configDefaults[k];
+	if (config[k] == undefined) {
+		config[k] = configDefaults[k];
+		configChanged = true;
+	}
 };
+if (configChanged) {
+	fs.writeFileSync(configFile, JSON.stringify(config));
+}
 
 // (cli_env) Setup env file
 var envFile = config.env || './.env';
